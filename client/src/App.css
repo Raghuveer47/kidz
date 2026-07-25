@@ -1,0 +1,28 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media (max-width: 640px) {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Masonry-style grid used for Class 1 - Set 2 (26 alphabets) */
+.masonry-grid {
+  column-count: 1;
+  column-gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .masonry-grid {
+    column-count: 2;
+  }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+}
