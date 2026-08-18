@@ -55,7 +55,7 @@ export default function AdminDashboard() {
       <div>
         <h2 className="text-2xl font-extrabold text-slate-900">Overview</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Users module is live. Curriculum outline CMS is live. Quizzes come next.
+          Users, Curriculum, and Quizzes modules are live. Reports / batches come next.
         </p>
       </div>
 
@@ -107,7 +107,13 @@ export default function AdminDashboard() {
             </Link>{' '}
             — Class 1–10 topic outline
           </li>
-          <li>Quiz bank + attempts / reports</li>
+          <li>
+            <Link to="/admin/quizzes" className="font-semibold text-cyan-700 hover:underline">
+              Quizzes
+            </Link>{' '}
+            — MCQ bank + publish + attempts API
+          </li>
+          <li>Reports / batches / progress (next)</li>
         </ul>
       </div>
     </div>

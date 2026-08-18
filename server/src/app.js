@@ -8,6 +8,7 @@ const authRoutes = require('./auth/auth.routes');
 const adminRoutes = require('./admin/admin.routes');
 const usersRoutes = require('./user/users.routes');
 const curriculumRoutes = require('./curriculum/curriculum.routes');
+const quizRoutes = require('./quiz/quiz.routes');
 const env = require('./config/env');
 
 const app = express();
@@ -60,6 +61,7 @@ app.get('/', (req, res) => {
     auth: '/api/auth',
     users: '/api/users',
     curriculum: '/api/curriculum',
+    quizzes: '/api/quizzes',
     admin: '/api/admin'
   });
 });
@@ -79,6 +81,9 @@ app.use('/api/users', usersRoutes);
 
 // Curriculum outline CMS (replaces legacy flat routes)
 app.use('/api/curriculum', curriculumRoutes);
+
+// Quizzes + attempts (Career Master–style, kids MCQ)
+app.use('/api/quizzes', quizRoutes);
 
 // Existing home routes (legacy flat folder)
 app.use('/api/home', require(path.join(__dirname, '../routes/home')));

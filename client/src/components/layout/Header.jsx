@@ -37,7 +37,7 @@ const Header = () => {
     { name: 'Learn by Class', path: '/#classes', isHash: true },
     { name: 'Learn by Technology', path: '/#technologies', isHash: true },
     { name: 'Buy Books', path: '/#books', isHash: true },
-    { name: 'Test My Skills', path: '/#skills', isHash: true },
+    { name: 'Test My Skills', path: '/quizzes' },
     { name: 'Projects', path: '/#projects', isHash: true },
   ];
 
@@ -93,6 +93,14 @@ const Header = () => {
           <p className="mt-1 text-xs font-semibold text-cyan-700">Class {user.classLevel}</p>
         ) : null}
       </div>
+      <Link
+        to="/quizzes"
+        onClick={() => setProfileOpen(false)}
+        className="flex w-full items-center gap-2 border-b border-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+      >
+        <Target className="h-4 w-4" />
+        My quizzes
+      </Link>
       {isAdmin ? (
         <Link
           to="/admin"
@@ -280,6 +288,14 @@ const Header = () => {
                       Admin dashboard
                     </Link>
                   ) : null}
+                  <Link
+                    to="/quizzes"
+                    onClick={() => setIsOpen(false)}
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 text-lg font-semibold text-violet-800"
+                  >
+                    <Target className="h-5 w-5" />
+                    My quizzes
+                  </Link>
                   <button
                     type="button"
                     onClick={handleLogout}

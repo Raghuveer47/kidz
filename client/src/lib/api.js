@@ -2,11 +2,11 @@ const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5050').
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
     headers: {
       'Content-Type': 'application/json',
       ...(options.headers || {}),
     },
-    ...options,
   });
 
   let data = null;
@@ -140,6 +140,69 @@ export const curriculumApi = {
       headers: authHeaders(accessToken),
       body: JSON.stringify({ replace: true }),
     }),
+};
+
+export const quizzesApi = {
+  list: (accessToken, params = {}) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && String(value).trim() !== '') {
+        query.set(key, String(value));
+      }
+    });
+    const qs = query.toString();
+    return request(`/api/quizzes${qs ? `?${qs}` : ''}`, {
+      method: 'GET',
+      headers: authHeaders(accessToken),
+    });
+  },
+
+  getById: (accessToken, id) =>
+    request(`/api/quizzes/${id}`, {
+      method: 'GET',
+      headers: authHeaders(accessToken),
+    }),
+
+  create: (accessToken, payload) =>
+    request('/api/quizzes', {
+      method: 'POST',
+      headers: authHeaders(accessToken),
+      body: JSON.stringify(payload),
+    }),
+
+  update: (accessToken, id, payload) =>
+    request(`/api/quizzes/${id}`, {
+      method: 'PUT',
+      headers: authHeaders(accessToken),
+      body: JSON.stringify(payload),
+    }),
+
+  remove: (accessToken, id) =>
+    request(`/api/quizzes/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders(accessToken),
+    }),
+
+  submitAttempt: (accessToken, id, answers) =>
+    request(`/api/quizzes/${id}/attempt`, {
+      method: 'POST',
+      headers: authHeaders(accessToken),
+      body: JSON.stringify({ answers }),
+    }),
+
+  listAttempts: (accessToken, id, params = {}) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && String(value).trim() !== '') {
+        query.set(key, String(value));
+      }
+    });
+    const qs = query.toString();
+    return request(`/api/quizzes/${id}/attempts${qs ? `?${qs}` : ''}`, {
+      method: 'GET',
+      headers: authHeaders(accessToken),
+    });
+  },
 };
 
 export { API_BASE };

@@ -137,7 +137,7 @@ const SkillsSection = () => {
 
                 <div className="flex justify-center">
                     <Link
-                        to="/skills"
+                        to="/quizzes"
                         className="group inline-flex items-center gap-3 rounded-full border-4 border-violet-900/25 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-amber-400 px-10 py-4 text-lg font-black text-white shadow-[6px_6px_0_rgba(91,33,182,0.4)] transition hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0_rgba(91,33,182,0.4)]"
                     >
                         Start a quiz

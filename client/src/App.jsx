@@ -13,7 +13,6 @@ import OutputDeviceDetail from './pages/OutputDeviceDetail';
 import PartsComputerDetail from './pages/PartsComputerDetail';
 import Scientists from './pages/Scientists';
 import Books from './pages/Books';
-import Skills from './pages/Skills';
 import Projects from './pages/Projects';
 import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -25,7 +24,9 @@ import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminCurriculum from './pages/admin/AdminCurriculum';
-import AdminPlaceholder from './pages/admin/AdminPlaceholder';
+import AdminQuizzes from './pages/admin/AdminQuizzes';
+import Quizzes from './pages/Quizzes';
+import QuizTake from './pages/QuizTake';
 
 function App() {
   const location = useLocation();
@@ -48,15 +49,7 @@ function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="curriculum" element={<AdminCurriculum />} />
-            <Route
-              path="quizzes"
-              element={
-                <AdminPlaceholder
-                  title="Quizzes"
-                  description="Quiz bank, attempts, and reports will be added in the next phase."
-                />
-              }
-            />
+            <Route path="quizzes" element={<AdminQuizzes />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Route>
         </Routes>
@@ -72,6 +65,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/login" element={<SignIn />} />
+          <Route path="/quizzes/:id" element={<QuizTake />} />
+          <Route path="/quizzes" element={<Quizzes />} />
           <Route path="/about-details" element={<AboutDetails />} />
           <Route path="/technologies" element={<TechnologyDetails />} />
           <Route path="/class2/input-devices/:deviceSlug" element={<InputDeviceDetail />} />
@@ -84,7 +79,7 @@ function App() {
           <Route path="/class/:classId/topic/:topicId" element={<TopicDetails />} />
           <Route path="/scientists" element={<Scientists />} />
           <Route path="/books" element={<Books />} />
-          <Route path="/skills" element={<Skills />} />
+          <Route path="/skills" element={<Navigate to="/quizzes" replace />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />

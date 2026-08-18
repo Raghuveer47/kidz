@@ -15,7 +15,7 @@ const navItems = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, end: true },
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/curriculum', label: 'Curriculum', icon: BookOpen },
-  { to: '/admin/quizzes', label: 'Quizzes', icon: ClipboardList, soon: true },
+  { to: '/admin/quizzes', label: 'Quizzes', icon: ClipboardList },
 ];
 
 export default function AdminLayout() {

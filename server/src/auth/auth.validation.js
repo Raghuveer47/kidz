@@ -133,10 +133,11 @@ const updateCurrentUserSchema = z.object({
 
 const validate = (schema) => (req, res, next) => {
   try {
+    // Express 5 leaves req.body undefined when no JSON body is sent
     const validatedData = schema.parse({
-      body: req.body,
-      query: req.query,
-      params: req.params
+      body: req.body ?? {},
+      query: req.query ?? {},
+      params: req.params ?? {}
     });
     req.body = validatedData.body || req.body;
     req.query = validatedData.query || req.query;

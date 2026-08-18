@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 import { authApi } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { hasAdminRole } from '../lib/roles';
+
+function safeNextPath(value) {
+  if (!value || !value.startsWith('/') || value.startsWith('//')) return null;
+  return value;
+}
 
 const emptyLogin = { email: '', password: '' };
 const emptySignup = {
@@ -16,6 +21,7 @@ const emptySignup = {
 
 function SignIn() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = useAuth();
   const [mode, setMode] = useState('login'); // login | signup
   const [loginForm, setLoginForm] = useState(emptyLogin);
@@ -40,7 +46,8 @@ function SignIn() {
       const result = await authApi.login(loginForm.email.trim(), loginForm.password);
       login(result.data);
       const loggedInUser = result.data?.user;
-      navigate(hasAdminRole(loggedInUser) ? '/admin' : '/');
+      const next = safeNextPath(searchParams.get('next'));
+      navigate(next || (hasAdminRole(loggedInUser) ? '/admin' : '/'));
     } catch (err) {
       setError(err.message || 'Login failed');
     } finally {
@@ -63,7 +70,8 @@ function SignIn() {
 
       const result = await authApi.signup(payload);
       login(result.data);
-      navigate('/');
+      const next = safeNextPath(searchParams.get('next'));
+      navigate(next || '/');
     } catch (err) {
       setError(err.message || 'Could not create account');
     } finally {
