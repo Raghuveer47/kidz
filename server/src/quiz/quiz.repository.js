@@ -144,7 +144,7 @@ class QuizRepository {
         classLevel: quiz.classLevel
       });
 
-      return { attempt, quizTitle: quiz.title };
+      return { attempt, quiz, quizTitle: quiz.title };
     } catch (error) {
       if (error instanceof ErrorHandler) throw error;
       throw new ErrorHandler(500, `Error submitting attempt: ${error.message}`);

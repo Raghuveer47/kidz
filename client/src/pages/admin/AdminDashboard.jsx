@@ -55,7 +55,7 @@ export default function AdminDashboard() {
       <div>
         <h2 className="text-2xl font-extrabold text-slate-900">Overview</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Users, Curriculum, and Quizzes modules are live. Reports / batches come next.
+          Users, Curriculum, Quizzes, Reports, Batches, Progress, and Home CMS are live.
         </p>
       </div>
 
@@ -92,28 +92,51 @@ export default function AdminDashboard() {
         />
       </div>
 
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6">
-        <h3 className="text-lg font-bold text-slate-900">Coming next</h3>
-        <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <h3 className="text-lg font-bold text-slate-900">Admin modules</h3>
+        <ul className="mt-3 grid gap-2 sm:grid-cols-2 text-sm text-slate-600">
           <li>
             <Link to="/admin/users" className="font-semibold text-cyan-700 hover:underline">
               Users
             </Link>{' '}
-            — create, roles, ban/activate
+            — roles, ban/activate
           </li>
           <li>
             <Link to="/admin/curriculum" className="font-semibold text-cyan-700 hover:underline">
               Curriculum
             </Link>{' '}
-            — Class 1–10 topic outline
+            — Class 1–10 topics
           </li>
           <li>
             <Link to="/admin/quizzes" className="font-semibold text-cyan-700 hover:underline">
               Quizzes
             </Link>{' '}
-            — MCQ bank + publish + attempts API
+            — builder + Excel import
           </li>
-          <li>Reports / batches / progress (next)</li>
+          <li>
+            <Link to="/admin/reports" className="font-semibold text-cyan-700 hover:underline">
+              Reports
+            </Link>{' '}
+            — attempt analytics
+          </li>
+          <li>
+            <Link to="/admin/batches" className="font-semibold text-cyan-700 hover:underline">
+              Batches
+            </Link>{' '}
+            — groups + enrollments
+          </li>
+          <li>
+            <Link to="/admin/progress" className="font-semibold text-cyan-700 hover:underline">
+              Progress
+            </Link>{' '}
+            — best quiz scores
+          </li>
+          <li>
+            <Link to="/admin/home" className="font-semibold text-cyan-700 hover:underline">
+              Home CMS
+            </Link>{' '}
+            — homepage sections
+          </li>
         </ul>
       </div>
     </div>

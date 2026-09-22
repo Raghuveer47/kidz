@@ -1,3 +1,4 @@
+const multer = require('multer');
 const QuizService = require('./quiz.service');
 const { asyncHandler } = require('../middleware/errorHandler');
 const {
@@ -5,7 +6,36 @@ const {
   QUESTION_TYPE_CATEGORIES
 } = require('./question-types.config');
 
+const excelUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const ok =
+      file.mimetype.includes('sheet') ||
+      file.mimetype.includes('excel') ||
+      file.originalname.match(/\.(xlsx|xls|csv)$/i);
+    if (ok) cb(null, true);
+    else cb(new Error('Only Excel (.xlsx) files are allowed'), false);
+  }
+});
+
 class QuizController {
+  static uploadExcel = [
+    excelUpload.single('file'),
+    asyncHandler(async (req, res) => {
+      const quiz = await QuizService.createFromExcel(
+        req.file?.buffer,
+        req.body || {},
+        req.user?.userId
+      );
+      res.status(201).json({
+        success: true,
+        message: 'Quiz imported from Excel',
+        data: quiz
+      });
+    })
+  ];
+
   static questionTypes = asyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,

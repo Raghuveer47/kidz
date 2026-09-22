@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Plus, RefreshCw, Trash2, Pencil, X, Eye, EyeOff } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Plus, RefreshCw, Trash2, Pencil, X, Eye, EyeOff, FileSpreadsheet } from 'lucide-react';
 import { quizzesApi } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -85,6 +85,16 @@ export default function AdminQuizzes() {
   const [form, setForm] = useState(emptyForm);
   const [formError, setFormError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [excelOpen, setExcelOpen] = useState(false);
+  const [excelMeta, setExcelMeta] = useState({
+    title: '',
+    classLevel: '1',
+    defaultMarks: '1',
+    isPublished: false,
+  });
+  const [excelBusy, setExcelBusy] = useState(false);
+  const [excelError, setExcelError] = useState('');
+  const excelInputRef = useRef(null);
 
   const load = useCallback(
     async (pageNumber = 1) => {
@@ -333,6 +343,45 @@ export default function AdminQuizzes() {
     }
   };
 
+  const downloadExcelTemplate = () => {
+    const csv = [
+      'question,type,optionA,optionB,optionC,optionD,correctOption,marks',
+      'What is the brain of a computer?,multiple_choice_single,CPU,Monitor,Keyboard,Mouse,A,1',
+      'Select input devices,multiple_choice_multiple,Keyboard,Monitor,Mouse,Speaker,"A,C",2',
+      'A mouse is an input device,true_false,,,,,TRUE,1',
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'quiz-import-template.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExcelImport = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setExcelBusy(true);
+    setExcelError('');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', excelMeta.title.trim() || file.name.replace(/\.\w+$/, ''));
+      formData.append('classLevel', excelMeta.classLevel);
+      formData.append('defaultMarks', excelMeta.defaultMarks);
+      formData.append('isPublished', String(excelMeta.isPublished));
+      await quizzesApi.uploadExcel(accessToken, formData);
+      setExcelOpen(false);
+      await load(1);
+    } catch (err) {
+      setExcelError(err.message || 'Import failed');
+    } finally {
+      setExcelBusy(false);
+      if (excelInputRef.current) excelInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -351,6 +400,17 @@ export default function AdminQuizzes() {
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setExcelError('');
+              setExcelOpen(true);
+            }}
+            className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Import Excel
           </button>
           <button
             type="button"
@@ -935,6 +995,79 @@ export default function AdminQuizzes() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      ) : null}
+
+      {excelOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-slate-900">Import quiz from Excel</h3>
+              <button type="button" onClick={() => setExcelOpen(false)}>
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <p className="mb-3 text-sm text-slate-600">
+              Supports MCQ single, MCQ multiple, and True/False. Columns:{' '}
+              <code className="text-xs">question, type, optionA–D, correctOption, marks</code>
+            </p>
+            {excelError ? (
+              <p className="mb-3 text-sm font-medium text-rose-600">{excelError}</p>
+            ) : null}
+            <div className="space-y-3">
+              <input
+                value={excelMeta.title}
+                onChange={(e) => setExcelMeta((m) => ({ ...m, title: e.target.value }))}
+                placeholder="Quiz title"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <select
+                  value={excelMeta.classLevel}
+                  onChange={(e) => setExcelMeta((m) => ({ ...m, classLevel: e.target.value }))}
+                  className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                >
+                  {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                    <option key={n} value={n}>
+                      Class {n}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  min={1}
+                  value={excelMeta.defaultMarks}
+                  onChange={(e) => setExcelMeta((m) => ({ ...m, defaultMarks: e.target.value }))}
+                  placeholder="Default marks"
+                  className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                />
+              </div>
+              <label className="flex items-center gap-2 text-sm font-semibold">
+                <input
+                  type="checkbox"
+                  checked={excelMeta.isPublished}
+                  onChange={(e) => setExcelMeta((m) => ({ ...m, isPublished: e.target.checked }))}
+                />
+                Publish after import
+              </label>
+              <button
+                type="button"
+                onClick={downloadExcelTemplate}
+                className="text-sm font-semibold text-cyan-700 hover:underline"
+              >
+                Download CSV template
+              </button>
+              <input
+                ref={excelInputRef}
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                disabled={excelBusy}
+                onChange={handleExcelImport}
+                className="block w-full text-sm"
+              />
+              {excelBusy ? <p className="text-sm text-slate-500">Importing…</p> : null}
+            </div>
           </div>
         </div>
       ) : null}

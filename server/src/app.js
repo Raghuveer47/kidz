@@ -2,13 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const path = require('path');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const authRoutes = require('./auth/auth.routes');
 const adminRoutes = require('./admin/admin.routes');
 const usersRoutes = require('./user/users.routes');
 const curriculumRoutes = require('./curriculum/curriculum.routes');
 const quizRoutes = require('./quiz/quiz.routes');
+const uploadRoutes = require('./upload/upload.routes');
+const batchesRoutes = require('./batches/batches.routes');
+const reportsRoutes = require('./reports/reports.routes');
+const progressRoutes = require('./progress/progress.routes');
+const homeRoutes = require('./home/home.routes');
 const env = require('./config/env');
 
 const app = express();
@@ -62,6 +66,11 @@ app.get('/', (req, res) => {
     users: '/api/users',
     curriculum: '/api/curriculum',
     quizzes: '/api/quizzes',
+    upload: '/api/upload',
+    batches: '/api/batches',
+    reports: '/api/reports',
+    progress: '/api/progress',
+    home: '/api/home',
     admin: '/api/admin'
   });
 });
@@ -85,8 +94,20 @@ app.use('/api/curriculum', curriculumRoutes);
 // Quizzes + attempts (Career Master–style, kids MCQ)
 app.use('/api/quizzes', quizRoutes);
 
-// Existing home routes (legacy flat folder)
-app.use('/api/home', require(path.join(__dirname, '../routes/home')));
+// Cloudinary image upload (admin)
+app.use('/api/upload', uploadRoutes);
+
+// Batches / summer groups (admin)
+app.use('/api/batches', batchesRoutes);
+
+// Quiz attempt reports (admin)
+app.use('/api/reports', reportsRoutes);
+
+// Topic / quiz progress (admin)
+app.use('/api/progress', progressRoutes);
+
+// Home CMS (public GET + admin write)
+app.use('/api/home', homeRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

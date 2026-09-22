@@ -17,6 +17,7 @@ router.use(authenticate);
 
 router.get('/question-types', QuizController.questionTypes);
 router.get('/', validate(listQuizzesSchema), QuizController.list);
+router.post('/upload-excel', requireAdmin, QuizController.uploadExcel);
 router.get('/:id', validate(quizIdSchema), QuizController.getById);
 router.post('/:id/attempt', validate(submitAttemptSchema), QuizController.submitAttempt);
 router.get('/:id/attempts', validate(quizIdSchema), QuizController.listAttempts);

@@ -25,6 +25,11 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminCurriculum from './pages/admin/AdminCurriculum';
 import AdminQuizzes from './pages/admin/AdminQuizzes';
+import AdminReports from './pages/admin/AdminReports';
+import AdminReportDetail from './pages/admin/AdminReportDetail';
+import AdminBatches from './pages/admin/AdminBatches';
+import AdminProgress from './pages/admin/AdminProgress';
+import AdminHome from './pages/admin/AdminHome';
 import Quizzes from './pages/Quizzes';
 import QuizTake from './pages/QuizTake';
 
@@ -50,6 +55,11 @@ function App() {
             <Route path="users" element={<AdminUsers />} />
             <Route path="curriculum" element={<AdminCurriculum />} />
             <Route path="quizzes" element={<AdminQuizzes />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="reports/:id" element={<AdminReportDetail />} />
+            <Route path="batches" element={<AdminBatches />} />
+            <Route path="progress" element={<AdminProgress />} />
+            <Route path="home" element={<AdminHome />} />
             <Route path="*" element={<Navigate to="/admin" replace />} />
           </Route>
         </Routes>

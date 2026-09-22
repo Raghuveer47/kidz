@@ -5,6 +5,10 @@ import {
   Users,
   BookOpen,
   ClipboardList,
+  BarChart3,
+  Layers,
+  TrendingUp,
+  Home as HomeIcon,
   LogOut,
   Home,
   Shield,
@@ -16,6 +20,10 @@ const navItems = [
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/curriculum', label: 'Curriculum', icon: BookOpen },
   { to: '/admin/quizzes', label: 'Quizzes', icon: ClipboardList },
+  { to: '/admin/reports', label: 'Reports', icon: BarChart3 },
+  { to: '/admin/batches', label: 'Batches', icon: Layers },
+  { to: '/admin/progress', label: 'Progress', icon: TrendingUp },
+  { to: '/admin/home', label: 'Home CMS', icon: HomeIcon },
 ];
 
 export default function AdminLayout() {
@@ -59,11 +67,6 @@ export default function AdminLayout() {
                 >
                   <Icon className="h-4 w-4" />
                   <span className="flex-1">{item.label}</span>
-                  {item.soon ? (
-                    <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-200">
-                      Soon
-                    </span>
-                  ) : null}
                 </NavLink>
               );
             })}
@@ -102,7 +105,6 @@ export default function AdminLayout() {
             </div>
           </header>
 
-          {/* Mobile nav */}
           <div className="flex gap-2 overflow-x-auto border-b border-slate-200 bg-white px-3 py-2 md:hidden">
             {navItems.map((item) => (
               <NavLink
